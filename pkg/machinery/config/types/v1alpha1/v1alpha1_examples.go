@@ -174,6 +174,18 @@ func machineFeaturesExample() *FeaturesConfig {
 	}
 }
 
+func machineDashboardExample() *DashboardConfig {
+	return &DashboardConfig{
+		DashboardBranding: dashboardBrandingExample(),
+	}
+}
+
+func dashboardBrandingExample() *DashboardBrandingConfig {
+	return &DashboardBrandingConfig{
+		BrandingName: "MyCustomOS",
+	}
+}
+
 func machineUdevExample() *UdevConfig {
 	return &UdevConfig{
 		UdevRules: []string{"SUBSYSTEM==\"drm\", KERNEL==\"renderD*\", GROUP=\"44\", MODE=\"0660\""},

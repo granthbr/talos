@@ -37,6 +37,7 @@ type MachineConfig interface {
 	Sysfs() map[string]string
 	SystemDiskEncryption() SystemDiskEncryption
 	Features() Features
+	Dashboard() Dashboard
 	Udev() UdevConfig
 	Logging() Logging
 	Kernel() Kernel
@@ -423,6 +424,16 @@ type HostDNS interface {
 // ImageCache describes the image cache configuration.
 type ImageCache interface {
 	LocalEnabled() bool
+}
+
+// Dashboard describes the dashboard configuration.
+type Dashboard interface {
+	Branding() DashboardBranding
+}
+
+// DashboardBranding describes the dashboard branding configuration.
+type DashboardBranding interface {
+	Name() string
 }
 
 // UdevConfig describes configuration for udev.

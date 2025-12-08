@@ -325,6 +325,15 @@ func (m *MachineConfig) Features() config.Features {
 	return m.MachineFeatures
 }
 
+// Dashboard implements the config.MachineConfig interface.
+func (m *MachineConfig) Dashboard() config.Dashboard {
+	if m.MachineDashboard == nil {
+		return &DashboardConfig{}
+	}
+
+	return m.MachineDashboard
+}
+
 // Udev implements the config.MachineConfig interface.
 func (m *MachineConfig) Udev() config.UdevConfig {
 	if m.MachineUdev == nil {

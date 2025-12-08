@@ -246,6 +246,13 @@ type MachineConfig struct {
 	//     - value: machineFeaturesExample()
 	MachineFeatures *FeaturesConfig `yaml:"features,omitempty"`
 	//   description: |
+	//     Configures the dashboard.
+	//
+	//     Changes to this field can be applied without a reboot.
+	//   examples:
+	//     - value: machineDashboardExample()
+	MachineDashboard *DashboardConfig `yaml:"dashboard,omitempty"`
+	//   description: |
 	//     Configures the udev system.
 	//   examples:
 	//     - value: machineUdevExample()
@@ -2291,6 +2298,32 @@ type HostDNSConfig struct {
 	//     When enabled, cluster member hostnames and node names are resolved using the host DNS resolver.
 	//     This requires service discovery to be enabled.
 	HostDNSResolveMemberNames *bool `yaml:"resolveMemberNames,omitempty"`
+}
+
+// DashboardConfig describes the dashboard configuration.
+//
+//	examples:
+//	  - value: machineDashboardExample()
+type DashboardConfig struct {
+	//   description: |
+	//     Configure dashboard branding.
+	//
+	//     This allows customizing the dashboard display name and other branding elements.
+	//     Changes to this field can be applied without a reboot.
+	//   examples:
+	//     - value: dashboardBrandingExample()
+	DashboardBranding *DashboardBrandingConfig `yaml:"branding,omitempty"`
+}
+
+// DashboardBrandingConfig describes the dashboard branding configuration.
+type DashboardBrandingConfig struct {
+	//   description: |
+	//     Custom name to display in the dashboard instead of "Talos".
+	//
+	//     This name will be shown in the dashboard header and info sections.
+	//   examples:
+	//     - value: '"MyCustomOS"'
+	BrandingName string `yaml:"name,omitempty"`
 }
 
 // VolumeMountConfig struct describes extra volume mount for the static pods.

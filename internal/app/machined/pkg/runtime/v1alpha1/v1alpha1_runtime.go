@@ -156,6 +156,7 @@ func (r *Runtime) CanApplyImmediate(cfg config.Provider) error {
 	// * .machine.nodeAnnotations
 	// * .machine.nodeLabels
 	// * .machine.nodeTaints
+	// * .machine.dashboard
 	// * .machine.features.kubernetesTalosAPIAccess
 	// * .machine.features.kubePrism
 	// * .machine.features.hostDNS
@@ -183,6 +184,7 @@ func (r *Runtime) CanApplyImmediate(cfg config.Provider) error {
 		newConfig.MachineConfig.MachineNodeAnnotations = currentConfig.MachineConfig.MachineNodeAnnotations
 		newConfig.MachineConfig.MachineNodeLabels = currentConfig.MachineConfig.MachineNodeLabels
 		newConfig.MachineConfig.MachineNodeTaints = currentConfig.MachineConfig.MachineNodeTaints
+		newConfig.MachineConfig.MachineDashboard = currentConfig.MachineConfig.MachineDashboard
 
 		if newConfig.MachineConfig.MachineFeatures != nil && currentConfig.MachineConfig.MachineFeatures != nil {
 			newConfig.MachineConfig.MachineFeatures.KubernetesTalosAPIAccessConfig = currentConfig.MachineConfig.MachineFeatures.KubernetesTalosAPIAccessConfig
