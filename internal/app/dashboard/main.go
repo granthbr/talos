@@ -14,7 +14,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/cosi-project/runtime/pkg/resource"
 	"github.com/cosi-project/runtime/pkg/safe"
 	"github.com/siderolabs/go-procfs/procfs"
 	"google.golang.org/grpc"
@@ -86,12 +85,7 @@ func dashboardMain() error {
 // Returns empty string if not configured or on error.
 func getBrandingFromConfig(ctx context.Context, c *client.Client) string {
 	// Get machine config resource
-	cfg, err := safe.StateGetByID[*configres.MachineConfig](
-		ctx,
-		c.COSI,
-		resource.NewMetadata(configres.NamespaceName, configres.MachineConfigType, configres.V1Alpha1ID, resource.VersionUndefined),
-		configres.V1Alpha1ID,
-	)
+	cfg, err := safe.StateGetByID[*configres.MachineConfig](ctx, c.COSI, configres.ActiveID)
 	if err != nil {
 		// Config not available, use default branding
 		return ""
@@ -108,12 +102,12 @@ func getBrandingFromConfig(ctx context.Context, c *client.Client) string {
 		return ""
 	}
 
-	dashboard := machine.Dashboard()
-	if dashboard == nil {
+	dashboardCfg := machine.Dashboard()
+	if dashboardCfg == nil {
 		return ""
 	}
 
-	branding := dashboard.Branding()
+	branding := dashboardCfg.Branding()
 	if branding == nil {
 		return ""
 	}
