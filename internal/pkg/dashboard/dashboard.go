@@ -170,7 +170,7 @@ func buildDashboard(ctx context.Context, cli *client.Client, opts ...Option) (*D
 
 	dashboard.app.SetRoot(dashboard.pages, true).SetFocus(dashboard.pages)
 
-	header := components.NewHeader()
+	header := components.NewHeader(defOptions.branding)
 	dashboard.mainGrid.AddItem(header, 0, 0, 1, 1, 0, 0, false)
 
 	if err = dashboard.initScreenConfigs(ctx, defOptions.screens); err != nil {

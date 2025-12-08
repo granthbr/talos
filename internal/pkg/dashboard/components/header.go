@@ -39,13 +39,19 @@ type Header struct {
 	selectedNode string
 	nodeMap      map[string]*headerData
 	spinnerPos   int
+	branding     string
 }
 
 // NewHeader initializes Header.
-func NewHeader() *Header {
+func NewHeader(branding string) *Header {
+	if branding == "" {
+		branding = "Talos"
+	}
+
 	header := &Header{
 		TextView: *tview.NewTextView(),
 		nodeMap:  make(map[string]*headerData),
+		branding: branding,
 	}
 
 	header.SetDynamicColors(true).SetText(noData)
@@ -119,8 +125,9 @@ func (widget *Header) redraw() {
 	spinnerPos := widget.spinnerPos % len(spinner)
 
 	text := fmt.Sprintf(
-		"[green]%s [yellow::b]%s[-:-:-] (%s): uptime %s, %s, %s RAM, PROCS %s, CPU %s, RAM %s",
+		"[green]%s [white::b]%s[-:-:-] [yellow::b]%s[-:-:-] (%s): uptime %s, %s, %s RAM, PROCS %s, CPU %s, RAM %s",
 		spinner[spinnerPos],
+		widget.branding,
 		data.hostname,
 		data.version,
 		data.uptime,

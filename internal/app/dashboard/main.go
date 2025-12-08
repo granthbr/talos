@@ -14,6 +14,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/cosi-project/runtime/pkg/resource"
+	"github.com/cosi-project/runtime/pkg/safe"
 	"github.com/siderolabs/go-procfs/procfs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -25,6 +27,7 @@ import (
 	"github.com/siderolabs/talos/pkg/grpc/middleware/authz"
 	"github.com/siderolabs/talos/pkg/machinery/client"
 	"github.com/siderolabs/talos/pkg/machinery/constants"
+	configres "github.com/siderolabs/talos/pkg/machinery/resources/config"
 	"github.com/siderolabs/talos/pkg/machinery/role"
 	"github.com/siderolabs/talos/pkg/startup"
 )
@@ -69,7 +72,53 @@ func dashboardMain() error {
 		}
 	}
 
-	return dashboard.Run(ctx, c, dashboard.WithAllowExitKeys(false), dashboard.WithScreens(screens...))
+	// read branding from machine config
+	branding := getBrandingFromConfig(ctx, c)
+
+	return dashboard.Run(ctx, c,
+		dashboard.WithAllowExitKeys(false),
+		dashboard.WithScreens(screens...),
+		dashboard.WithBranding(branding),
+	)
+}
+
+// getBrandingFromConfig reads the custom branding name from machine config.
+// Returns empty string if not configured or on error.
+func getBrandingFromConfig(ctx context.Context, c *client.Client) string {
+	// Get machine config resource
+	cfg, err := safe.StateGetByID[*configres.MachineConfig](
+		ctx,
+		c.COSI,
+		resource.NewMetadata(configres.NamespaceName, configres.MachineConfigType, configres.V1Alpha1ID, resource.VersionUndefined),
+		configres.V1Alpha1ID,
+	)
+	if err != nil {
+		// Config not available, use default branding
+		return ""
+	}
+
+	// Extract branding from config
+	machineConfig := cfg.Config()
+	if machineConfig == nil {
+		return ""
+	}
+
+	machine := machineConfig.Machine()
+	if machine == nil {
+		return ""
+	}
+
+	dashboard := machine.Dashboard()
+	if dashboard == nil {
+		return ""
+	}
+
+	branding := dashboard.Branding()
+	if branding == nil {
+		return ""
+	}
+
+	return branding.Name()
 }
 
 func showConfigURLTab() bool {

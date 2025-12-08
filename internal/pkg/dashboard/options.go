@@ -8,10 +8,14 @@ import (
 	"time"
 )
 
+// DefaultBranding is the default branding name shown in the dashboard.
+const DefaultBranding = "Talos"
+
 type options struct {
 	interval      time.Duration
 	allowExitKeys bool
 	screens       []Screen
+	branding      string
 }
 
 func defaultOptions() *options {
@@ -23,6 +27,7 @@ func defaultOptions() *options {
 			ScreenMonitor,
 			ScreenNetworkConfig,
 		},
+		branding: DefaultBranding,
 	}
 }
 
@@ -48,5 +53,15 @@ func WithAllowExitKeys(allowExitKeys bool) Option {
 func WithScreens(screens ...Screen) Option {
 	return func(o *options) {
 		o.screens = screens
+	}
+}
+
+// WithBranding sets the custom branding name to display in the dashboard.
+// If empty, the default "Talos" branding is used.
+func WithBranding(name string) Option {
+	return func(o *options) {
+		if name != "" {
+			o.branding = name
+		}
 	}
 }
